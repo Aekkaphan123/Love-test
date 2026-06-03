@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Love Test — แบบทดสอบความรัก</title>
+<link rel="stylesheet" href="style.css">
+<style>
+.welcome-wrap{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  min-height:100vh;padding:2rem 1rem;text-align:center;
+}
+.heart-big{
+  font-size:5rem;display:block;margin-bottom:1rem;
+  animation:float 2.5s ease-in-out infinite;
+}
+.welcome-title{
+  font-size:2rem;font-weight:600;color:var(--pink-deep);
+  line-height:1.25;margin-bottom:.5rem;
+}
+.welcome-sub{
+  font-size:1rem;color:var(--muted);margin-bottom:2rem;
+  font-family:'Sarabun',sans-serif;font-weight:300;line-height:1.7;
+}
+.dots{display:flex;gap:.45rem;justify-content:center;margin-top:2rem}
+.dot{
+  width:8px;height:8px;border-radius:50%;
+  background:var(--pink-light);border:1.5px solid var(--pink-mid);
+  transition:background .3s;
+}
+.dot.active{background:var(--pink-deep)}
+</style>
+</head>
+<body>
+
+<div class="welcome-wrap anim-fade">
+  <span class="heart-big">💗</span>
+  <h1 class="welcome-title">Love Test<br>แบบทดสอบความรัก</h1>
+  <p class="welcome-sub">
+    มาดูกันว่าเทอรู้จักเราดีแค่ไหน<br>
+    พร้อมแล้วก็เริ่มเลยยยย 🥰
+  </p>
+  <a href="quiz.html" style="text-decoration:none">
+    <button class="btn btn-primary" style="font-size:1.1rem;padding:.9rem 2.5rem">
+      เริ่มเลย! 🌸
+    </button>
+  </a>
+  <div class="dots">
+    <div class="dot active"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+  </div>
+</div>
+
+</body>
+</html>

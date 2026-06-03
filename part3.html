@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Love Test — Part 3</title>
+<link rel="stylesheet" href="style.css">
+<style>
+.submit-row{display:flex;justify-content:flex-end;margin-top:.8rem}
+.char-count{font-size:.75rem;color:var(--muted);font-family:'Sarabun',sans-serif;margin-right:auto;align-self:center}
+.next-btn-wrap{text-align:center;margin-top:1.2rem}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="logo">💕 Love Test <span>— ถามความรู้สึก</span></div>
+</header>
+
+<main class="page">
+  <div class="container anim-fade">
+
+    <div class="part-header">
+      <div class="part-badge">PART 3 / 3</div>
+      <h2 class="part-title">ถามความรู้สึก 💬</h2>
+      <p class="part-sub">ตอบตามใจจริงเลยนะ ไม่มีถูกผิด<br>แล้วจะได้เห็นคำตอบของเค้า 🥰</p>
+    </div>
+
+    <div class="progress-wrap">
+      <div class="progress-label">
+        <span id="progress-text">ข้อ 1 / 11</span>
+        <span id="progress-pct">0%</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+    </div>
+
+    <div class="step-dots" id="step-dots"></div>
+
+    <div id="q-area" style="margin-top:1.2rem"></div>
+
+  </div>
+</main>
+
+<script>
+const questions = [
+  {
+    q:"เจอกันครั้งแรกเทอรู้สึกไงบ้าง?",
+    answer:"กังวลสุดๆ ประหม่ามาก 55555 เค้ากลัวมันออกมาไม่ดีเพราะเค้าอยากไปต่อกับเทอมากๆๆ หลังจากคุยกันเค้าก็ประทับใจเทอมาก รู้สึกเลือกถูกคละ เทอชวนคุยเก่ง คุยง่าย ทำให้เค้าสบายใจสุดๆ เวลาคุยด้วย 🥺"
+  },
+  {
+    q:"เค้ากอดเทอครั้งแรกเทอรู้สึกไง?\n(วันที่นั่งอยู่โซนหน้าที่เค้าไม่กล้าขอเทอเป็นแฟนอะ ที่เอาหนังสือให้อ่าน)",
+    answer:"กอดเทอเองอัตโนมัติเลยย รู้สึกสบายใจแหละ เค้ารู้สึกอบอุ่นสุดๆๆ กอดแรกเค้าเลยยย 🤍"
+  },
+  {
+    q:"ถ้าถึงวันที่เทอต้องไปฝึกงานเราต้องไกลกัน เทอคิดว่าเราควรทำไงให้เราไม่รู้สึกห่างกัน?",
+    answer:"คงจะพยายามไปหาเทอบ่อยๆ คงต้องอาจโทรกวนเทอเกือบทุกวันนะ แต่ก็แอบกลัวเทอจะเหนื่อย ไม่กล้าโทรไปกวนมากก เค้าคงทำทุกทางแหละให้เรายังรักกันมากขึ้นทุกวัน 🪴"
+  },
+  {
+    q:"ตอนจุ๊บกันรู้สึกยังไง?",
+    answer:"เค้าไม่เคยเลย ไม่รู้ทำไมถึงกล้า พอเป็นเทอเค้าไม่รู้สึกอึดอัดเลย รู้สึกมันเป็นปกติมาก อาจจะเพราะรักเทออมากกใจเลยรู้สึกปลอดภัย เลยกล้าทำ 🫶"
+  },
+  {
+    q:"ถ้าสมมติอยู่ดีๆ ต้องเลือกระหว่างเค้ากับเพื่อน เทอจะเลือกอะไร?",
+    answer:"เค้าไม่ให้เทอเลือกหรอก เค้ารักเทอ ไม่ยอมให้เทอต้องมีเรื่องลำบากใจแบบนั้นหรอก เรื่องยากๆ เดี๋ยวเค้าจัดการเอง 🤍👊"
+  },
+  {
+    q:"ตอนที่เค้านอยล่าสุดเรื่องเที่ยวอะ เทอรู้สึกยังไง?",
+    answer:"เค้าแค่อยากออกไปใช้ชีวิตกับเทอเฉยๆ เพื่อพัฒนาความสัมพันธ์เรา เราจะได้ใกล้กันมากขึ้น เข้าใจกันมากขึ้น เค้าแค่อยากไปมากๆๆๆ แต่พูดเกริ่นๆ นิดเดียวเหมือนจะไม่ได้ไปเลยนอยย 😮‍💨"
+  },
+  {
+    q:"เทอกลัวอะไรที่สุดในความสัมพันธ์เรา?",
+    answer:"กลัววันนึงเราจะไม่เข้าใจกันและหาทางออกไม่ได้ 😔"
+  },
+  {
+    q:"เทอคิดว่าอะไรจะเป็นปัญหาของเราในอนาคต?",
+    answer:"เค้าขี้น้อยใจมากๆ และหวงเทอมากๆ เค้ากลัวเค้าไม่เข้าใจเทอและเทอก็เหนื่อยจากทำงาน แล้วเราอาจจะทะเลาะกัน 🥲"
+  },
+  {
+    q:"เวลาเทอนอย เทอต้องการอะไรมากที่สุด อยากให้เค้าทำไร?",
+    answer:"เค้าอยากให้เทอโอ๋เค้า เพราะเค้ารักเทอมากๆ เวลาเค้านอยขอแค่มีเทอคอยโอ๋ คอยอยู่ข้างๆ อยู่ใกล้ๆ เค้าก็หายนอยละ เทอจุ๊บเค้าเค้าก็หายและ 💗"
+  },
+  {
+    q:"ถ้ามีเวลาหยุดนานๆ อยากทำไรด้วยกัน?",
+    answer:"อยากออกไปใช้ชีวิตกับเทอ แค่นอนกอดเทอเค้าก็มีความสุขมากละ 🥰"
+  },
+  {
+    q:"เทอรักเค้ามั้ยยยย? บรรยายความรู้สึกเทอที่มีต่อเค้าหน่อย 💗",
+    answer:"ไม่รู้มากแค่ไหน แต่เทอคือกอดที่ปลอดภัยที่สุด เป็นเซฟโซนของหัวใจเค้า เค้ารักพี่แป้งนะ 🩷"
+  }
+];
+
+let currentIdx = 0;
+
+function buildDots(){
+  const wrap = document.getElementById('step-dots');
+  questions.forEach((_,i)=>{
+    const d = document.createElement('div');
+    d.className = 'step-dot';
+    wrap.appendChild(d);
+  });
+}
+
+function updateDots(){
+  const dots = document.querySelectorAll('.step-dot');
+  dots.forEach((d,i)=>{
+    d.className = 'step-dot';
+    if(i < currentIdx) d.classList.add('done');
+    else if(i === currentIdx) d.classList.add('active');
+  });
+}
+
+function updateProgress(){
+  const pct = Math.round((currentIdx / questions.length) * 100);
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-text').textContent = `ข้อ ${currentIdx+1} / ${questions.length}`;
+  document.getElementById('progress-pct').textContent = pct + '%';
+  updateDots();
+}
+
+function render(){
+  const q = questions[currentIdx];
+  const area = document.getElementById('q-area');
+
+  area.innerHTML = '';
+  const card = document.createElement('div');
+  card.className = 'p3-card anim-fade';
+
+  // Preserve newlines in question text
+  const qHtml = q.q.replace(/\n/g,'<br>');
+
+  card.innerHTML = `
+    <div class="q-num">ข้อ ${currentIdx+1} / ${questions.length}</div>
+    <div class="p3-qtext">${qHtml}</div>
+    <textarea id="ta" placeholder="พิมพ์คำตอบของเทอที่นี่..." oninput="updateChar()"></textarea>
+    <div class="submit-row">
+      <span class="char-count" id="char-count">0 ตัวอักษร</span>
+      <button class="btn btn-primary btn-sm" onclick="submitAnswer()">ส่งคำตอบ 💌</button>
+    </div>`;
+
+  area.appendChild(card);
+  document.getElementById('ta').focus();
+  updateProgress();
+}
+
+function updateChar(){
+  const ta = document.getElementById('ta');
+  const cc = document.getElementById('char-count');
+  if(cc) cc.textContent = ta.value.length + ' ตัวอักษร';
+}
+
+function submitAnswer(){
+  const ta = document.getElementById('ta');
+  const val = ta.value.trim();
+  if(!val){
+    ta.style.borderColor = 'var(--red)';
+    ta.placeholder = 'กรุณาพิมพ์คำตอบก่อนนะ 🙏';
+    return;
+  }
+
+  localStorage.setItem('lovetest_p3_q' + (currentIdx + 1), val);
+
+  // Disable input & button
+  ta.disabled = true;
+  const btn = document.querySelector('.submit-row .btn');
+  btn.disabled = true;
+  btn.textContent = 'ส่งแล้ว ✓';
+  btn.style.opacity = '.7';
+
+  // Show answer reveal
+  const q = questions[currentIdx];
+  const card = document.querySelector('.p3-card');
+
+  const reveal = document.createElement('div');
+  reveal.className = 'answer-reveal';
+
+  const isLast = currentIdx + 1 >= questions.length;
+  const nextLabel = isLast ? '🎉 ดูผลลัพธ์' : `ข้อถัดไป →`;
+
+  reveal.innerHTML = `
+    <div class="answer-label">💌 คำตอบของเค้า</div>
+    <div class="answer-text">${q.answer}</div>
+    <div class="next-btn-wrap">
+      <button class="btn btn-primary btn-sm" style="margin-top:1rem" onclick="nextQuestion()">${nextLabel}</button>
+    </div>`;
+
+  card.appendChild(reveal);
+  reveal.scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+function nextQuestion(){
+  currentIdx++;
+  if(currentIdx >= questions.length){
+    window.location.href = 'result.html';
+  } else {
+    render();
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+}
+
+buildDots();
+render();
+</script>
+</body>
+</html>

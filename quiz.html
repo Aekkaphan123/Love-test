@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Love Test — Part 1 & 2</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="logo">💕 Love Test <span>— รู้จักกันดีแค่ไหน</span></div>
+</header>
+
+<main class="page">
+  <div class="container anim-fade">
+
+    <!-- Part header -->
+    <div class="part-header" id="part-header">
+      <div class="part-badge" id="part-badge">PART 1 / 3</div>
+      <h2 class="part-title" id="part-title">รู้จักกันดีแค่ไหน? 🌸</h2>
+      <p class="part-sub" id="part-sub">เลือกคำตอบที่ถูกต้องเกี่ยวกับเค้านะ</p>
+    </div>
+
+    <!-- Progress -->
+    <div class="progress-wrap">
+      <div class="progress-label">
+        <span id="progress-text">ข้อ 1 / 9</span>
+        <span id="progress-score">คะแนน: 0 / 9</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+    </div>
+
+    <!-- Step dots -->
+    <div class="step-dots" id="step-dots"></div>
+
+    <!-- Question card -->
+    <div class="q-card" id="q-card" style="margin-top:1.2rem"></div>
+
+  </div>
+</main>
+
+<!-- Popup -->
+<div class="popup-overlay" id="popup">
+  <div class="popup-box">
+    <span class="popup-emoji" id="popup-emoji">💖</span>
+    <div class="popup-title" id="popup-title"></div>
+    <div class="popup-msg" id="popup-msg"></div>
+    <div class="popup-hint" id="popup-hint" style="display:none"></div>
+    <button class="btn btn-primary btn-sm" onclick="nextQuestion()">ต่อไปเลย →</button>
+  </div>
+</div>
+
+<script>
+// ── Data ──────────────────────────────────────────────────────
+const questions = [
+  // Part 1 (index 0-3)
+  {
+    part:1,
+    q:"เค้าชอบผลไม้ไรมากที่สุด?",
+    choices:["แตงโม","สตรอว์เบอร์รี่","เมล่อน","มังคุด"],
+    correct:2,
+    popupOk:{emoji:"💚",title:"ถูกต้อง!",msg:"ควรรู้นะ 😏"},
+    popupFail:{emoji:"😤",title:"ผิดแล้ว...",msg:"ไม่น่าผิดเลย!"}
+  },
+  {
+    part:1,
+    q:"เค้ากลัวไรที่สุด?",
+    choices:["หนอน","ผี","ความมืด","เทองอน"],
+    correct:3,
+    popupOk:{emoji:"😄",title:"ถูกต้อง!",msg:"แหมมมมม รู้จักกันดีจังเลย 🥰"},
+    popupFail:{emoji:"😅",title:"ผิดแล้ว...",msg:"รู้ดีขนาดนั้นเลยเหรอ 🙃"}
+  },
+  {
+    part:1,
+    q:"เค้าไม่ชอบออกกำลังกายส่วนไหนมากที่สุด?",
+    choices:["อก","แขน","ขา","หลัง"],
+    correct:2,
+    popupOk:{emoji:"✅",title:"ถูกต้อง!",msg:"เก่งมากเลยนะ 💪"},
+    popupFail:{emoji:"❌",title:"ผิดแล้ว...",msg:"เฮ้ยยย ยังไม่รู้จักกันดีพอเลยนะ 😶"}
+  },
+  {
+    part:1,
+    q:"เค้าชอบดูหนังแบบไหน?",
+    choices:["Drama","Fantasy","Romance","Horror"],
+    correct:1,
+    popupOk:{emoji:"🌟",title:"ถูกต้อง!",msg:"เก่งมากก รู้ใจกันเลย ✨"},
+    popupFail:{emoji:"😭",title:"ผิดแล้ว...",msg:"น่าจะรู้นะ!!! 🫵"}
+  },
+  // Part 2 (index 4-8)
+  {
+    part:2,
+    q:"เจอกันครั้งแรกเทอคิดว่าเค้ารู้สึกยังไง?",
+    choices:["เขินนน","อยากกลับแล้ววววว","กังวล คิดมาก","ตื่นเต้นน"],
+    correct:2,
+    popupOk:{emoji:"✅",title:"ถูกต้อง! ✓",msg:""},
+    popupFail:{emoji:"❌",title:"ผิด ✗",msg:""}
+  },
+  {
+    part:2,
+    q:"เจอกันครั้งแรกใครทักก่อน?",
+    choices:["เทอ","เค้า"],
+    correct:0,
+    popupOk:{emoji:"✅",title:"ถูกต้อง! ✓",msg:""},
+    popupFail:{emoji:"❌",title:"ผิด ✗",msg:""}
+  },
+  {
+    part:2,
+    q:"เค้าทักหาเทอครั้งแรกวันที่เท่าไหร่? (ห้ามถามนะ!)",
+    choices:["15","16","17","18"],
+    correct:1,
+    popupOk:{emoji:"✅",title:"ถูกต้อง! ✓",msg:""},
+    popupFail:{emoji:"❌",title:"ผิด ✗",msg:""}
+  },
+  {
+    part:2,
+    q:"คุยกันกี่วันเทอปฏิเสธเค้า?",
+    choices:["7 วัน","8 วัน","9 วัน","10 วัน"],
+    correct:2,
+    popupOk:{emoji:"✅",title:"ถูกต้อง! ✓",msg:""},
+    popupFail:{emoji:"❌",title:"ผิด ✗",msg:""}
+  },
+  {
+    part:2,
+    q:"เทอหลับซบไหล่เค้ากี่ครั้งละ?",
+    choices:["1 ครั้ง","2 ครั้ง","3 ครั้ง","4 ครั้ง"],
+    correct:1,
+    popupOk:{emoji:"✅",title:"ถูกต้อง! ✓",msg:""},
+    popupFail:{emoji:"❌",title:"ผิด ✗",msg:""}
+  }
+];
+
+// ── State ─────────────────────────────────────────────────────
+let currentIdx = 0;
+let score = 0;
+let p1Score = 0;
+let pendingNext = false;
+
+// ── Init ──────────────────────────────────────────────────────
+function init(){
+  // Resume from localStorage if navigating back
+  const saved = localStorage.getItem('lovetest_quiz_progress');
+  if(saved){
+    const s = JSON.parse(saved);
+    currentIdx = s.idx || 0;
+    score      = s.score || 0;
+    p1Score    = s.p1Score || 0;
+  }
+  buildDots();
+  render();
+}
+
+function buildDots(){
+  const wrap = document.getElementById('step-dots');
+  wrap.innerHTML = '';
+  questions.forEach((_,i)=>{
+    const d = document.createElement('div');
+    d.className = 'step-dot';
+    wrap.appendChild(d);
+  });
+}
+
+function updateDots(){
+  const dots = document.querySelectorAll('.step-dot');
+  dots.forEach((d,i)=>{
+    d.className = 'step-dot';
+    if(i < currentIdx) d.classList.add('done');
+    else if(i === currentIdx) d.classList.add('active');
+  });
+}
+
+// ── Render ────────────────────────────────────────────────────
+function render(){
+  if(currentIdx >= questions.length){
+    finishQuiz(); return;
+  }
+  const q = questions[currentIdx];
+  const total = questions.length;
+  const isPart2Start = currentIdx === 4;
+
+  // Update header when switching to part 2
+  if(q.part === 1){
+    document.getElementById('part-badge').textContent = 'PART 1 / 3';
+    document.getElementById('part-title').textContent = 'รู้จักกันดีแค่ไหน? 🌸';
+    document.getElementById('part-sub').textContent = 'เลือกคำตอบที่ถูกต้องเกี่ยวกับเค้านะ';
+  } else {
+    document.getElementById('part-badge').textContent = 'PART 2 / 3';
+    document.getElementById('part-title').textContent = 'ความทรงจำของเรา 🫧';
+    document.getElementById('part-sub').textContent = 'จำ moment ดีๆ ของเราได้ไหมเอ่ย';
+  }
+
+  // Progress
+  const pct = (currentIdx / total) * 100;
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-text').textContent = `ข้อ ${currentIdx+1} / ${total}`;
+  document.getElementById('progress-score').textContent = `คะแนน: ${score} / ${total}`;
+
+  updateDots();
+
+  // Card
+  const card = document.getElementById('q-card');
+  card.style.animation = 'none';
+  card.offsetHeight; // reflow
+  card.style.animation = '';
+  card.className = 'q-card anim-fade';
+
+  const localNum = q.part === 1 ? currentIdx + 1 : currentIdx - 3;
+  const localTotal = q.part === 1 ? 4 : 5;
+
+  card.innerHTML = `
+    <div class="q-num">ข้อ ${localNum} / ${localTotal} &nbsp;·&nbsp; Part ${q.part}</div>
+    <div class="q-text">${q.q}</div>
+    <div class="choices">
+      ${q.choices.map((c,i)=>`<button class="choice-btn" onclick="answer(${i})">${c}</button>`).join('')}
+    </div>`;
+}
+
+// ── Answer ────────────────────────────────────────────────────
+function answer(idx){
+  if(pendingNext) return;
+  pendingNext = true;
+
+  const q = questions[currentIdx];
+  const btns = document.querySelectorAll('.choice-btn');
+  btns.forEach(b => b.disabled = true);
+
+  const isCorrect = idx === q.correct;
+  if(isCorrect){
+    score++;
+    if(q.part === 1) p1Score++;
+  }
+
+  btns[q.correct].classList.add('correct');
+  if(!isCorrect) btns[idx].classList.add('wrong');
+  btns.forEach((b,i)=>{
+    if(i !== q.correct && i !== idx) b.classList.add('dimmed');
+  });
+
+  // Save progress
+  localStorage.setItem('lovetest_quiz_progress', JSON.stringify({
+    idx: currentIdx + 1,
+    score,
+    p1Score
+  }));
+
+  // Build popup content
+  const pop = isCorrect ? q.popupOk : q.popupFail;
+  document.getElementById('popup-emoji').textContent = pop.emoji;
+
+  const titleEl = document.getElementById('popup-title');
+  titleEl.textContent = pop.title;
+  titleEl.className = 'popup-title ' + (isCorrect ? 'correct' : 'wrong');
+
+  document.getElementById('popup-msg').textContent = pop.msg;
+
+  const hintEl = document.getElementById('popup-hint');
+  if(!isCorrect){
+    hintEl.textContent = '✓ คำตอบที่ถูก: ' + q.choices[q.correct];
+    hintEl.style.display = 'inline-block';
+  } else {
+    hintEl.style.display = 'none';
+  }
+
+  document.getElementById('popup').classList.add('open');
+}
+
+function nextQuestion(){
+  document.getElementById('popup').classList.remove('open');
+  currentIdx++;
+  pendingNext = false;
+
+  if(currentIdx >= questions.length){
+    finishQuiz();
+  } else {
+    render();
+  }
+}
+
+function finishQuiz(){
+  // Save final scores
+  localStorage.setItem('lovetest_p1', p1Score);
+  localStorage.setItem('lovetest_p2', score - p1Score);
+  localStorage.setItem('lovetest_total', score);
+  localStorage.removeItem('lovetest_quiz_progress');
+  window.location.href = 'part3.html';
+}
+
+init();
+</script>
+</body>
+</html>

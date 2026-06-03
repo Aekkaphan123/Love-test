@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Love Test — ผลลัพธ์</title>
+<link rel="stylesheet" href="style.css">
+<style>
+.score-bar-wrap{margin:.3rem 0 .1rem}
+.score-mini-bar{background:#fce7f3;border-radius:9999px;height:5px;overflow:hidden;margin-top:.3rem}
+.score-mini-fill{height:100%;background:linear-gradient(90deg,var(--pink),var(--purple));border-radius:9999px;transition:width 1s ease .4s}
+.confetti-row{text-align:center;font-size:1.5rem;letter-spacing:.3rem;margin:.6rem 0;animation:float 3s ease-in-out infinite}
+.share-note{font-size:.8rem;color:var(--muted);font-family:'Sarabun',sans-serif;text-align:center;margin-top:.8rem}
+.divider{border:none;border-top:1.5px dashed #fce7f3;margin:1.2rem 0}
+.total-chip{
+  display:inline-flex;align-items:center;gap:.5rem;
+  background:linear-gradient(135deg,var(--pink),var(--purple));
+  color:#fff;border-radius:9999px;
+  padding:.4rem 1.2rem;font-size:.9rem;font-weight:500;
+  margin-bottom:1rem;box-shadow:0 4px 16px rgba(244,114,182,.35);
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="logo">💕 Love Test <span>— ผลลัพธ์</span></div>
+</header>
+
+<main class="page">
+  <div class="container anim-fade">
+
+    <!-- Hero -->
+    <div class="result-hero">
+      <span class="result-emoji-big anim-float" id="result-emoji">🎉</span>
+      <div class="deco-hearts">♡ ♡ ♡</div>
+      <div class="total-chip" id="total-chip">คะแนนรวม: — / 9</div>
+      <div class="result-verdict" id="result-verdict">กำลังคำนวณ...</div>
+    </div>
+
+    <!-- Confetti -->
+    <div class="confetti-row" id="confetti-row">🌸 🩷 🌸</div>
+
+    <!-- Score breakdown -->
+    <div class="score-card">
+      <div class="score-row">
+        <span class="score-part">🌸 Part 1 — รู้จักกันดีแค่ไหน</span>
+        <span class="score-val" id="r1">— / 4</span>
+      </div>
+      <div class="score-bar-wrap">
+        <div class="score-mini-bar"><div class="score-mini-fill" id="bar1" style="width:0%"></div></div>
+      </div>
+
+      <div class="score-row" style="margin-top:.6rem">
+        <span class="score-part">🫧 Part 2 — ความทรงจำของเรา</span>
+        <span class="score-val" id="r2">— / 5</span>
+      </div>
+      <div class="score-bar-wrap">
+        <div class="score-mini-bar"><div class="score-mini-fill" id="bar2" style="width:0%"></div></div>
+      </div>
+
+      <hr class="divider">
+
+      <div class="score-row">
+        <span class="score-part" style="font-weight:500;color:var(--text)">คะแนนรวม (Part 1 + 2)</span>
+        <span class="score-val" id="r-total" style="font-size:1.05rem">— / 9</span>
+      </div>
+    </div>
+
+    <!-- Message -->
+    <div class="result-msg" id="result-msg">...</div>
+
+    <!-- Buttons -->
+    <div style="display:flex;flex-direction:column;gap:.7rem;align-items:center">
+      <a href="quiz.html" onclick="resetGame(event)">
+        <button class="btn btn-primary">เล่นอีกรอบ 🔄</button>
+      </a>
+      <a href="love-test.html">
+        <button class="btn btn-secondary">กลับหน้าแรก 🏠</button>
+      </a>
+    </div>
+
+    <p class="share-note">Part 3 ไม่มีคะแนนนะ — ขอบคุณที่เล่นด้วยกัน 🩷</p>
+
+  </div>
+</main>
+
+<script>
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwbMCHlRSRBjnmEhpkHfiXLBXq-yonO40TbZZEtOqnAvON2zTOzxQDfCyzLD6TcjrXw7w/exec";
+
+function resetGame(e){
+  localStorage.removeItem('lovetest_p1');
+  localStorage.removeItem('lovetest_p2');
+  localStorage.removeItem('lovetest_total');
+  localStorage.removeItem('lovetest_quiz_progress');
+  for(let i = 1; i <= 11; i++) localStorage.removeItem('lovetest_p3_q' + i);
+}
+
+async function saveToSheet(){
+  const payload = {
+    timestamp:  new Date().toISOString(),
+    p1_score:   parseInt(localStorage.getItem('lovetest_p1')    || '0'),
+    p2_score:   parseInt(localStorage.getItem('lovetest_p2')    || '0'),
+    total_score:parseInt(localStorage.getItem('lovetest_total') || '0'),
+    p3_q1:  localStorage.getItem('lovetest_p3_q1')  || '',
+    p3_q2:  localStorage.getItem('lovetest_p3_q2')  || '',
+    p3_q3:  localStorage.getItem('lovetest_p3_q3')  || '',
+    p3_q4:  localStorage.getItem('lovetest_p3_q4')  || '',
+    p3_q5:  localStorage.getItem('lovetest_p3_q5')  || '',
+    p3_q6:  localStorage.getItem('lovetest_p3_q6')  || '',
+    p3_q7:  localStorage.getItem('lovetest_p3_q7')  || '',
+    p3_q8:  localStorage.getItem('lovetest_p3_q8')  || '',
+    p3_q9:  localStorage.getItem('lovetest_p3_q9')  || '',
+    p3_q10: localStorage.getItem('lovetest_p3_q10') || '',
+    p3_q11: localStorage.getItem('lovetest_p3_q11') || ''
+  };
+
+  console.log("=== saveToSheet payload ===", payload);
+
+  try {
+    await fetch(APPS_SCRIPT_URL, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain" },
+      body: JSON.stringify(payload)
+    });
+  } catch(err) {
+    console.log("saveToSheet error:", err);
+  }
+}
+
+function loadResult(){
+  const p1 = parseInt(localStorage.getItem('lovetest_p1') || '0');
+  const p2 = parseInt(localStorage.getItem('lovetest_p2') || '0');
+  const total = p1 + p2;
+
+  // Update score displays
+  document.getElementById('r1').textContent = `${p1} / 4`;
+  document.getElementById('r2').textContent = `${p2} / 5`;
+  document.getElementById('r-total').textContent = `${total} / 9`;
+  document.getElementById('total-chip').textContent = `คะแนนรวม: ${total} / 9`;
+
+  // Animate bars (slight delay for visual flair)
+  setTimeout(()=>{
+    document.getElementById('bar1').style.width = ((p1/4)*100) + '%';
+    document.getElementById('bar2').style.width = ((p2/5)*100) + '%';
+  }, 100);
+
+  // Verdict
+  let emoji, verdict, msg, confetti;
+
+  if(total >= 8){
+    emoji = '🥰';
+    verdict = 'รู้ใจกันมากเลยยย!';
+    msg = 'โอ้โห! เทอรู้จักเค้าและจำความทรงจำของเราได้ดีมากๆ เลยนะ เค้าปลื้มมากเลย รักเทออยู่นะ 🩷🩷';
+    confetti = '🌸 💖 🌸 💖 🌸';
+  } else if(total >= 5){
+    emoji = '💕';
+    verdict = 'รู้จักกันพอสมควรเลยนะ';
+    msg = 'เก่งมากเลยนะเทอ! รู้จักเค้าได้ดีทีเดียว ยังมีบางเรื่องที่เทอยังไม่รู้นะ ค่อยๆ เรียนรู้กันต่อไปนะ เราจะรู้ใจกันมากขึ้นเรื่อยๆ เลย 🥰';
+    confetti = '🌸 💕 🌸';
+  } else {
+    emoji = '🥺';
+    verdict = 'ต้องศึกษากันเพิ่มอีกนิดนึงนะ';
+    msg = 'ไม่เป็นไรเลย เค้ารักเทอไม่ว่าจะได้คะแนนเท่าไหร่ เราค่อยๆ ทำความรู้จักกันเพิ่มขึ้นนะ เพราะเราเพิ่งเริ่มต้นกันเองเลย 💗';
+    confetti = '🌸 🥺 🌸';
+  }
+
+  document.getElementById('result-emoji').textContent = emoji;
+  document.getElementById('result-verdict').textContent = verdict;
+  document.getElementById('result-msg').textContent = msg;
+  document.getElementById('confetti-row').textContent = confetti;
+}
+
+loadResult();
+saveToSheet();
+</script>
+</body>
+</html>
